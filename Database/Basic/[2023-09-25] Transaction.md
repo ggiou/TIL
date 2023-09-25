@@ -106,8 +106,7 @@ A 은행에서 출금하여 B은행으로 송금하려고 한다.
 </details> 
 
 #### [3-2] 상태
-![trans_state](https://github.com/ggiou/TIL/assets/110371892/37e6f0e3-7ef5-45aa-b4dd-0329c7b2979f){:width="200" height ="150"}
-
+![trans_state](https://github.com/ggiou/TIL/assets/110371892/37e6f0e3-7ef5-45aa-b4dd-0329c7b2979f)
 - <b>활성(Active)</b> : 트랜잭션이 현재 실행 중인 상태 <br>
 - <b>성공</b><br>
 : - <b>부분 완료(Partially Committed)</b> : 트랜잭션의 마지막 연산까지 실행되고, Commit 연산이 실행되기 직전의 상태 <br>
