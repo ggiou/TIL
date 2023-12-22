@@ -111,8 +111,9 @@ If you do have an explicit constructor, put the @Builder annotation on the const
 ⭕ 따라서, 데이터 일관성, 객체불변성 등을 만족시킨다. 또한 코드 가독성 역시 올라간다.
 </pre>
 </div>
-</details> 
-``` java
+</details>
+
+```` java
 // builder 패턴 예시
 PersonInfo personinfo = new PersonInfo
     .Builder("Runa")    		// 필수값 입력 ( 빌더클래스 생성자로 빌더객체 생성)
