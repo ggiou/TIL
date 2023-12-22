@@ -76,10 +76,70 @@ If you do have an explicit constructor, put the @Builder annotation on the const
 다른 생성자를 명시하지 않고 @Builder만 클래스에 적용하면 @AllArgsConstructor(access = AccessLevel.PACKAGE)가 자동 적용된다.
 
 ### (3) @Builder 개념
+#### 1) Builder 패턴 이란?
+: 디자인 패턴 중 하나로, 생성과 표현의 분리이다. 쉽게 말해 생성자에서 인자가 많을때 고려해볼 수 있는 패턴이다.<br>
+이는 점증적 생성자 패턴과 + 자바 빈즈 패턴의 단점을 모두 보완해서 나타난 것으로, <br>
+정보들은 자바빈즈패턴처럼 받되, 데이터 일관성을 위해 정보들을 다 받은 후에 객체를 생성한다.<br>
 
-## 2.org.apache.ibatis.exceptions.PersistenceException Error
-### 내가 겪은 에러
+#### 2) Builder 패턴의 장점
+<details>
+<summary> Builder 패턴의 장점 </summary>
+<div markdown="1">
+<pre>
+▶ 불필요한 생성자의 제거
+▶ 데이터의 순서에 상관없이 객체생성 가능
+▶ 명시적 선언으로 이해하기가 쉽고
+   각 인자가 어떤 의미인지 알기 쉽다.
+▶ setter메서드가 없으므로 변경 불가능한 객체를 만들수있다.
+▶ 한번에 객체를 생성하므로 객체일관성이 깨지지 않는다.
+▶ build()함수가 null인지 체크해주므로 검증이 가능하다.
+❌ 안그러면 set하지않은 객체에대해 get을 하게되는경우 nullPointerExcetpion발생 등등의 문제
+</pre>
+</div>
+</details> 
+<details>
+<summary> Builder 패턴의 생성 설명 </summary>
+<div markdown="1">
+<pre>
+◾ A클래스 내부에 빌더클래스를 생성한다.
+◾ 각 멤버변수별 메서드를 작성하는데, 각 메소드는 변수에 값을 set하고 빌더객체를 리턴한다.
+◾ build()메서드는 필수 멤버변수의 null체크를 하고 지금까지 set된 builder를 바탕으로 A클래스의 생성자를 호출하고 인스턴스를 리턴한다.
 
-### 해결 방법
+❗ setter에 리턴자료형을 Builder객체로 지정함으로써, 메서드체이닝기법을 적용하고 정보를 다 넣은경우 build()메서드로 객체를 생성한다.
+❗ build( ) 메서드를 쓴 이후 에는 PersonInfo 클래스의 멤버변수를 변경 할 수 있는 방법은 리플렉션 기법(동적시점에 변경) 빼곤 존재하지 않는다.
 
-### 간단한 설명
+⭕ 따라서, 데이터 일관성, 객체불변성 등을 만족시킨다. 또한 코드 가독성 역시 올라간다.
+</pre>
+</div>
+</details> 
+``` java
+// builder 패턴 예시
+PersonInfo personinfo = new PersonInfo
+    .Builder("Runa")    		// 필수값 입력 ( 빌더클래스 생성자로 빌더객체 생성)
+    .setAge(16)  			      // 값 set
+    .setPhoneNumber(1004)
+    .build() 				        // build() 가 객체를 생성해 돌려준다.
+// 이런식으로 간결하게, 필요한 인자값들을 설정 할 수 있다.
+````
+
+#### 3) Lombok @Builder
+: 빌더클래스를 직접 만들지 않아도 롬복플러그인이 지원해주는 어노테이션 하나로 클래스를 생성할 수 있다.<br>
+즉 클래스 또는 생성자 위에 @Builder어노테이션을 붙여주면 빌더패턴 코드가 빌드된다.<br>
+생성자 상단에 선언시 생성자에 포함된 필드만 빌더에 포함! <br>
+
+```` java
+// @Builder 어노테이션을 해당 Class에 붙이면 적용된다.
+@Builder
+public class Person {
+    private final String name;
+    private final int age;
+    private final int phone;
+}
+
+// 아래와 같이 간단히 객체 생성이 가능해진다.
+Person person = Person.builder() 
+    .name("Runa")
+    .age(20)
+    .phone(1004)
+    .build();
+````
